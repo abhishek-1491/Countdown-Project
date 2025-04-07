@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <style>
+        /* ... (styles from previous example) ... */
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="datetime-local"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Countdown Timer</h1>
+        <div class="input-group">
+            <label for="endDate">Select End Date and Time:</label>
+            <input type="datetime-local" id="endDate" name="endDate">
+        </div>
+        <button onclick="startCountdown()">Start Countdown</button>
+        <div class="timer" id="timer"></div>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        const timerDisplay = document.getElementById('timer');
+        const messageDisplay = document.getElementById('message');
+        let countdownInterval; // Store the interval ID
+
+        function countdown(endDate) {
+            clearInterval(countdownInterval); // Clear any existing interval
+
+            countdownInterval = setInterval(() => { // Assign the interval ID
+                const now = new Date().getTime();
+                const timeLeft = endDate.getTime() - now;
+
+                if (timeLeft < 0) {
+                    timerDisplay.textContent = "Time's up!";
+                    messageDisplay.textContent = "The target time has passed.";
+                    clearInterval(countdownInterval);
+                    return;
+                }
+
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                timerDisplay.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                messageDisplay.textContent = "Time remaining:";
+            }, 1000);
+        }
+
+        function startCountdown() {
+            const endDateInput = document.getElementById('endDate');
+            if (!endDateInput.value) {
+                alert("Please select a date and time.");
+                return;
+            }
+
+          try{
+            const endDate = new Date(endDateInput.value);
+
+            if (isNaN(endDate.getTime())) {
+                alert("Invalid date or time format. Please use the correct format.");
+                return;
+            }
+
+            countdown(endDate);
+          }
+          catch(error){
+            alert("Error in date or time format. Please use the correct format.");
+            return;
+          }
+        }
+    </script>
+</body>
+</html>
